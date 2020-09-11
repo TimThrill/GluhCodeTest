@@ -7,30 +7,13 @@ namespace Gluh.CodingTest.Test
 {
     public class CalculateOrderWeightTest
     {
-        private readonly ShippingCalculator _calculator;
-
-        public CalculateOrderWeightTest()
-        {
-            _calculator = new ShippingCalculator();
-        }
-
-        [Fact]
-        public void CalculateOrderWeightWithNullOrder_ReturnZero()
-        {
-            // Act
-            var weight = _calculator.GetOrderShippingWeight(null);
-
-            // Assert
-            Assert.Equal(0m, weight);
-        }
-
         [Fact]
         public void CalculateOrderWeightWithNullProductList_ReturnZero()
         {
             var order = new SalesOrder();
 
             // Act
-            var weight = _calculator.GetOrderShippingWeight(order);
+            var weight = order.GetOrderShippingWeight();
 
             // Assert
             Assert.Equal(0m, weight);
@@ -61,7 +44,7 @@ namespace Gluh.CodingTest.Test
             };
 
             // Act
-            var weight = _calculator.GetOrderShippingWeight(order);
+            var weight = order.GetOrderShippingWeight();
 
             // Assert
             Assert.Equal(30, weight);
