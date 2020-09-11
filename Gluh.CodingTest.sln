@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2048
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gluh.CodingTest", "Gluh.CodingTest\Gluh.CodingTest.csproj", "{13002518-F07F-4180-A1D8-E5CB239B9BFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gluh.CodingTest.Test", "Gluh.CodingTest.Test\Gluh.CodingTest.Test.csproj", "{BA7719E9-BD70-47AD-8A19-03D7CA5AD0ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{13002518-F07F-4180-A1D8-E5CB239B9BFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13002518-F07F-4180-A1D8-E5CB239B9BFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13002518-F07F-4180-A1D8-E5CB239B9BFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA7719E9-BD70-47AD-8A19-03D7CA5AD0ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA7719E9-BD70-47AD-8A19-03D7CA5AD0ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA7719E9-BD70-47AD-8A19-03D7CA5AD0ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA7719E9-BD70-47AD-8A19-03D7CA5AD0ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

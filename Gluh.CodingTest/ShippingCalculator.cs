@@ -43,5 +43,15 @@ namespace Gluh.CodingTest
         {
             throw new NotImplementedException();
         }
+
+        public decimal GetOrderShippingWeight(SalesOrder salesOrder)
+        {
+            if(salesOrder == null)
+            {
+                return 0m;
+            }
+
+            return salesOrder.Lines?.Sum(p => p.Product.Weight) ?? 0;
+        }
     }
 }
