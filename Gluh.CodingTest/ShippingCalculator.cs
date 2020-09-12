@@ -6,12 +6,16 @@ using System.IO;
 
 namespace Gluh.CodingTest
 {
+    /// <summary>
+    /// Assumption
+    /// 1. An order can be split into any portion as required
+    /// </summary>
     public class ShippingCalculator
     {
-
         private List<ShippingPriceRate> _priceRates;
         private List<ShippingWeightRate> _weightRates;
         private List<ShippingAPIRate> _apiRates;
+        private ShippingApiClient _client;
 
         public ShippingCalculator()
         {
@@ -34,79 +38,138 @@ namespace Gluh.CodingTest
                 new ShippingAPIRate { WeighMin = 30, WeighMax = 35, RateAdjustmentPercent = 7.5m },
                 new ShippingAPIRate { WeighMin = 35, WeighMax = null }
             };
+
+            _client = new ShippingApiClient();
+        }
+
+        public decimal Calculate(SalesOrder salesOrder)
+        {
+            var priceOptimalSolution = CalculatePriceBasedOptimalShippingAmount(salesOrder);
+            var weightOptimalSolution = CalculateWeightBasedOptimalShippingAmount(salesOrder);
+            var apiOptimalSolution = CalculateThridPartyBasedOptimalShippingAmount(salesOrder);
+            var optimalShippingCost = 0m;
+            var optimalShippingWeight = 0m;
+
+            if(priceOptimalSolution.Item2 >= weightOptimalSolution.Item2)
+            {
+                optimalShippingWeight = priceOptimalSolution.Item1;
+                optimalShippingCost = priceOptimalSolution.Item2;
+            }
+            else
+            {
+                optimalShippingWeight = weightOptimalSolution.Item1;
+                optimalShippingCost = weightOptimalSolution.Item2;
+            }
+
+            if(optimalShippingCost < apiOptimalSolution.Item2)
+            {
+                optimalShippingWeight = apiOptimalSolution.Item1;
+                optimalShippingCost = apiOptimalSolution.Item2;
+            }
+
+            return optimalShippingWeight;
         }
 
         /// <summary>
-        /// To get the optimal (the most expensive) shipping amount
-        /// OrderShippingAmount = Rate * Weight
-        /// As Weight is a constant, so that we need to find the highest 
-        /// rate for this order via using PriceRate, WeightRate, or ApiRate
+        /// Given an order, calculate the best shipping amount according to ShippingWeightRate rule
         /// </summary>
-        /// <ShippingAPIRate>
-        /// According to ShippingApiClient, there is a amplification factor for shipping weight,
-        /// so that the actual rate for ShippingAPIRate can be following numbers
-        /// Actual weight: [0, 4),                      rate:   n/a
-        /// Actual weight: [4, 5],                      rate:   5 * 2.5 = 12.25
-        /// Actual weight: (5, 10/1.5=20/3),            rate:   n/a
-        /// Actual weight: [20/3, 10],                  rate:   5 * 1.5 = 7.5
-        /// Actual weight: (10, 20],                    rate:   5 * 1.25 = 6.25
-        /// Actual weight: (20, 30/1.15=600/23),        rate:   5 * 1.15 = 5.75
-        /// Actual weight: [600/23, 35/1.15=700/23],    rate:   7.5 * 1.15 = 8.625
-        /// Actual weight: (700/23, max),               rate:   n/a
-        /// </ShippingAPIRate>
-        public decimal Calculate(SalesOrder salesOrder)
+        /// <param name="order"></param>
+        /// <returns>The shipping amount sent and total shipping cost</returns>
+        public Tuple<decimal, decimal> CalculateWeightBasedOptimalShippingAmount(SalesOrder order)
         {
-            var price = salesOrder.GetOrderPrice();
-            var weight = salesOrder.GetOrderShippingWeight();
-            decimal optimalAmount = 0m;
-            // Combined ShippingAPIRate chart above with ShippingWeightRate
-            // We can conclude the most expensive rate based on weight can following
-            // [0, 4)       =>  10      (ShippingWeightRate)
-            // [4, 5]       =>  12.25   (ShippingAPIRate)
-            // (5, 20/3)    =>  7       (ShippingWeightRate)
-            // [20/3, 10)   =>  7.5     (ShippingAPIRate)
-            // [10, max)    =>  20      (ShippingWeightRate)
+            var shippingCost = 0m;
+            var shippingWeight = order.GetOrderShippingWeight();
 
-            if(price < 0 || weight < 0)
+            if(shippingWeight >= 0 && shippingWeight <= 5)
             {
-                throw new InvalidDataException("Price or weight cannot be less than zero");
+                shippingCost = shippingWeight * 10;
             }
-
-            // Combined above chart with ShippingPriceRate
-            // We can conclude that
-            if(price >= 100 && price <= 500 && weight > 5 && weight < 10)
+            else if(shippingWeight > 5 && shippingWeight <= 50/7)
             {
-                // Apply ShippingPriceRate 10
-                optimalAmount = weight * 10m;
+                // If weight is between 5kg and 7kg, shipping 5kg with $5 is the optimum option
+                shippingCost = 50m;
+                shippingWeight = 5m;
             }
-            else if(price >= 1000 && weight < 10)
+            else if(shippingWeight > 50/7 && shippingWeight < 10)
             {
-                // Apply ShippingPriceRate 15
-                optimalAmount = weight * 15m;
+                shippingCost = shippingWeight * 7;
             }
-            else if( weight >= 0 && weight < 4)
-            {
-                optimalAmount = weight * 10m;
-            }
-            else if( weight >= 4 && weight <= 5)
-            {
-                optimalAmount = weight * 12.25m;
-            }
-            else if( weight > 5 && weight < 20/3)
-            {
-                optimalAmount = weight * 7m;
-            }
-            else if(weight >= 20/3 && weight < 10)
-            {
-                optimalAmount = weight * 7.5m;
-            } 
             else
             {
-                optimalAmount = weight * 20m;
+                shippingCost = shippingWeight * 20;
             }
 
-            return optimalAmount;
+            return new Tuple<decimal, decimal>(shippingWeight, shippingCost);
         }
 
+        /// <summary>
+        /// Given an order, calculate the best shipping amount according to ShippingAPIRate rule
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns>The shipping amount sent and total shipping cost</returns>
+        public Tuple<decimal, decimal> CalculateThridPartyBasedOptimalShippingAmount(SalesOrder order)
+        {
+            var shippingCost = 0m;
+            var shippingWeight = order.GetOrderShippingWeight();
+
+            if(shippingWeight >= 0 && shippingWeight < 10)
+            {
+                shippingCost = shippingWeight * _client.GetRate(0, 0, shippingWeight);
+            }
+            else if(shippingWeight >= 10 && shippingWeight <= 30)
+            {
+                shippingCost = shippingWeight * (_client.GetRate(0, 0, shippingWeight) + 5);
+            }
+            else if(shippingWeight > 30 && shippingWeight <= 35)
+            {
+                shippingCost = shippingWeight * (_client.GetRate(0, 0, shippingWeight) * 1.075m);
+            }
+            else if(shippingWeight > 35)
+            {
+                shippingCost = shippingWeight * _client.GetRate(0, 0, shippingWeight);
+            }
+
+            return new Tuple<decimal, decimal>(shippingWeight, shippingCost);
+        }
+
+        /// <summary>
+        /// Given an order, calculate the best shipping amount according to ShippingPriceRate rule
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns>The shipping amount sent and total shipping cost</returns>
+        public Tuple<decimal, decimal> CalculatePriceBasedOptimalShippingAmount(SalesOrder order)
+        {
+            var totalPrice = order.GetOrderPrice();
+
+            // From the ShippingPriceRate rule, we can see that we should send as much amount as possible
+
+            var shippingCost = 0m;
+            var shippingWeight = order.GetOrderShippingWeight();
+            if(totalPrice >= 0 && totalPrice <= 50)
+            {
+                shippingCost = shippingWeight * 5.5m;
+            }
+            else if(totalPrice > 50 && totalPrice < 100)
+            {
+                // As shipping rate between $50 and $100 is zero, the optimised shipping amount is max at 50kg
+                shippingCost = 50 * 5.5m;
+                shippingWeight = 50;
+            }
+            else if(totalPrice >= 100 && totalPrice <= 500)
+            {
+                shippingCost = shippingWeight * 10m;
+            }
+            else if(totalPrice > 500 && totalPrice < 1000)
+            {
+                shippingCost = 500 * 10m;
+                shippingWeight = 500;
+            }
+            else if(totalPrice >= 1000)
+            {
+                shippingCost = shippingWeight * 15m;
+            }
+
+            return Tuple.Create(shippingWeight, shippingCost);
+        }
     }
 }
