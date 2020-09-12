@@ -82,7 +82,7 @@ namespace Gluh.CodingTest
             var shippingCost = 0m;
             var shippingWeight = order.GetOrderShippingWeight();
 
-            if(shippingWeight >= 0 && shippingWeight <= 5)
+            if(shippingWeight >= 1 && shippingWeight <= 5)
             {
                 shippingCost = shippingWeight * 10;
             }
@@ -154,8 +154,7 @@ namespace Gluh.CodingTest
             else if(totalPrice > 50 && totalPrice < 100)
             {
                 // As shipping rate between $50 and $100 is zero, the optimised shipping amount is max at 50kg
-                shippingCost = 50 * 5.5m;
-                shippingWeight = 50;
+                shippingCost = shippingWeight * 5.5m;
             }
             else if(totalPrice >= 100 && totalPrice <= 500)
             {
@@ -163,8 +162,8 @@ namespace Gluh.CodingTest
             }
             else if(totalPrice > 500 && totalPrice < 1000)
             {
-                shippingCost = 500 * 10m;
-                shippingWeight = 500;
+                // There is no rule for price rages [500, 1000], so assume that there is no cost for shipping
+                shippingCost = 0;
             }
             else if(totalPrice >= 1000)
             {
