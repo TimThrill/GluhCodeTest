@@ -155,7 +155,14 @@ namespace Gluh.CodingTest
             else if(totalPrice > 50 && totalPrice < 100)
             {
                 // As shipping rate between $50 and $100 is zero, the optimised shipping amount is max at 50kg
-                shippingCost = shippingWeight * 5.5m;
+                if(shippingWeight <= 50)
+                {
+                    shippingCost = shippingWeight * 5.5m;
+                }
+                else
+                {
+                    shippingCost = shippingWeight * 0m;
+                }
             }
             else if(totalPrice >= 100 && totalPrice <= 500)
             {
