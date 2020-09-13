@@ -9,12 +9,10 @@ namespace Gluh.CodingTest.Test
     public class OptimalShippingAmountTest
     {
         private readonly ShippingCalculator _calculator;
-        private readonly ShippingApiClient _apiClient;
         
         public OptimalShippingAmountTest()
         {
             _calculator = new ShippingCalculator();
-            _apiClient = new ShippingApiClient();
         }
 
         [Fact]
@@ -68,8 +66,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 7kg with API shipping rate
-            var expectedShippingAmmount = 5m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -98,8 +96,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 5m;
+            // Expect ship 5kg with ShippingWeightRate $10/kg
+            var expectedShippingAmmount = _calculator.CalculateWeightBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -128,8 +126,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 10m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -158,8 +156,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 33m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -188,8 +186,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 36m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -220,8 +218,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 7kg with API shipping rate
-            var expectedShippingAmmount = 5m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -250,8 +248,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 5m;
+            // Expect using ShippingWeightRate
+            var expectedShippingAmmount = _calculator.CalculateWeightBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -280,8 +278,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 10m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -310,8 +308,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 33m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -340,8 +338,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 36m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -372,8 +370,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 7kg with API shipping rate
-            var expectedShippingAmmount = 5m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -402,8 +400,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 5.1m;
+            // Expect using ShippingPriceRate
+            var expectedShippingAmmount = _calculator.CalculatePriceBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -432,8 +430,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 10m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -462,8 +460,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 33m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -492,8 +490,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 36m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -524,8 +522,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 7kg with API shipping rate
-            var expectedShippingAmmount = 5m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -554,8 +552,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 5m;
+            // Expect using ShippingWeightRate
+            var expectedShippingAmmount = _calculator.CalculateWeightBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -584,8 +582,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 10m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -614,8 +612,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 33m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -644,8 +642,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 36m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -676,8 +674,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 7kg with API shipping rate
-            var expectedShippingAmmount = 5m;
+            // Expect using ShippingPriceRate
+            var expectedShippingAmmount = _calculator.CalculatePriceBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -706,8 +704,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 5.1m;
+            // Expect using ShippingPriceRate
+            var expectedShippingAmmount = _calculator.CalculatePriceBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -736,8 +734,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 10m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -766,8 +764,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 33m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);
@@ -796,8 +794,8 @@ namespace Gluh.CodingTest.Test
             // Act
             var shippingAmount = _calculator.Calculate(order);
 
-            // Expect 5kg with weight shipping rate
-            var expectedShippingAmmount = 36m;
+            // Expect using ShippingAPIRate
+            var expectedShippingAmmount = _calculator.CalculateThridPartyBasedOptimalShippingAmount(order).Item2;
 
             // Assert
             Assert.Equal(expectedShippingAmmount, shippingAmount);

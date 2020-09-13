@@ -11,6 +11,7 @@ namespace Gluh.CodingTest
     /// 1. An order can be split into any portion as required
     /// 2. When shipping weight is between [10kg, 30kg], the method to calculate API rate is: ShippingApiClient.GetRate(weight) + 5
     /// 3. When shipping weight is between [30kg, 35kg], the method to calculate API rate is: ShippingApiClient.GetRate(weight) * 1.075
+    /// 4. Shipping amount means the shipping cost instead of shipping weight
     /// </summary>
     public class ShippingCalculator
     {
@@ -69,7 +70,7 @@ namespace Gluh.CodingTest
                 optimalShippingCost = apiOptimalSolution.Item2;
             }
 
-            return optimalShippingWeight;
+            return optimalShippingCost;
         }
 
         /// <summary>
